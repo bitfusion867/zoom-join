@@ -19,7 +19,7 @@ const Header = () => {
               <Search className="w-3.5 h-3.5 group-hover:text-white transition-colors" />
               <button
                 type="submit"
-                className="hover:text-white transition-colors"
+                className="hover:text-white transition-colors cursor-pointer"
               >
                 Search
               </button>
