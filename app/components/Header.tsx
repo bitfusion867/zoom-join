@@ -109,7 +109,9 @@ const Header = () => {
       <div className="px-4 sm:px-8 lg:px-12 xl:px-24 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
         {/* Logo Section */}
         <div className="shrink-0">
-          <img src="/logo.png" alt="Zoom Logo" className="w-24 sm:w-28" />
+          <a href="https://www.zoom.com/en/">
+            <img src="/logo.png" alt="Zoom Logo" className="w-24 sm:w-28" />
+          </a>
         </div>
 
         {/* Desktop Links (Hidden on Tablet/Mobile) */}
