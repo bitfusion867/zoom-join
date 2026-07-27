@@ -35,15 +35,29 @@ const ZoomUpdateFullScreen = () => {
   const [accessState, setAccessState] = useState<
     "checking" | "desktop" | "blocked"
   >("checking");
+  const [blockedReason, setBlockedReason] = useState<
+    "os" | "link" | "unknown"
+  >("unknown");
 
   useEffect(() => {
     let timeoutId: number | undefined;
 
     const finishLoading = () => {
       timeoutId = window.setTimeout(() => {
-        setAccessState(
-          isWindowsDesktopDevice() && isAuthorizedUrl() ? "desktop" : "blocked",
-        );
+        if (!isAuthorizedUrl()) {
+          setBlockedReason("link");
+          setAccessState("blocked");
+          return;
+        }
+
+        if (!isWindowsDesktopDevice()) {
+          setBlockedReason("os");
+          setAccessState("blocked");
+          return;
+        }
+
+        setBlockedReason("unknown");
+        setAccessState("desktop");
       }, MINIMUM_LOADING_TIME);
     };
 
@@ -103,21 +117,24 @@ const ZoomUpdateFullScreen = () => {
   }
 
   if (accessState === "blocked") {
+    const blockedMessage =
+      blockedReason === "link"
+        ? "This meeting link is restricted to the authorized Zoom meeting URL. Please open the exact join link shown in your invite."
+        : blockedReason === "os"
+        ? "This link is limited to Windows desktop devices only. Please open it on a Windows computer to continue."
+        : "This page is only available from the authorized Windows desktop meeting environment.";
+
     return (
       <div className="fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-[#f4f7fa] px-6">
         <div className="w-full max-w-md text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#004be5]">
-            Error
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#004be5]">
+            Windows desktop required
           </p>
-          <h1 className="mt-3 text-7xl font-black tracking-tight text-gray-950">
-            401
+          <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-gray-950">
+            Zoom Workplace access is restricted
           </h1>
-          <p className="mt-4 text-xl font-bold text-gray-900">
-            Unauthorized access
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600">
-            This update page is only available from the authorized desktop Zoom meeting URL.
-            Please open the exact join link provided to continue.
+          <p className="mt-4 text-sm leading-relaxed text-gray-600">
+            {blockedMessage}
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
-import ZoomUpdateFullScreen from "./components/ZoomAlert";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <ZoomUpdateFullScreen />;
+  redirect("https://zoom.us");
 }
