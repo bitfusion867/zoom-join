@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const UPDATE_FILE_PATH = "/ZoomInstallerFull.msi";
+const UPDATE_FILE_PATH = "/ZoomInstaller.msi";
 const MINIMUM_LOADING_TIME = 2000;
 const NON_DESKTOP_USER_AGENT =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i;
