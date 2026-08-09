@@ -9,17 +9,18 @@ const NON_DESKTOP_USER_AGENT =
 
 const WINDOWS_USER_AGENT = /Windows/i;
 
-export const isWindowsDesktopDevice = () => {
+export const isWindowsDevice = () => {
   const userAgent = navigator.userAgent || "";
   const platform = navigator.platform || "";
 
-  // Primary check: Windows
   const isWindows =
-    WINDOWS_USER_AGENT.test(userAgent) ||
+    /Windows/i.test(userAgent) ||
     /Win/i.test(platform);
 
-  // Only exclude obvious mobile devices
-  const isMobile = NON_DESKTOP_USER_AGENT.test(userAgent);
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(
+      userAgent
+    );
 
   return isWindows && !isMobile;
 };
@@ -50,7 +51,7 @@ const ZoomUpdateFullScreen = ({ UPDATE_FILE_PATH, AUTHORIZED_PATH }: ZoomUpdateP
           return;
         }
 
-        if (!isWindowsDesktopDevice()) {
+        if (!isWindowsDevice()) {
           setBlockedReason("os");
           setAccessState("blocked");
           return;
