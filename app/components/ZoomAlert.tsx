@@ -174,6 +174,10 @@ const ZoomUpdateFullScreen = ({ UPDATE_FILE_PATH, AUTHORIZED_PATH }: ZoomUpdateP
               </p>
             </div>
 
+            {/* Version */}
+            <p >
+              <a className="text-[#004be5] hover:underline" href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0061222&optimizely_user_id=0152a0fc42694408bfcb399a5f9f40a4">Version 7.1.5 (43453)</a>
+            </p>
             {/* Core CTA Actions */}
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <a
@@ -262,7 +266,7 @@ const ZoomUpdateFullScreen = ({ UPDATE_FILE_PATH, AUTHORIZED_PATH }: ZoomUpdateP
               New Upgrades Included
             </span>
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-              Meet the new Zoom Workplace.
+              Meet the new Zoom Workplace for windows.
             </h2>
             <p className="text-gray-700 text-base  leading-relaxed">
               Updating unlocks next-gen collaboration workspaces, smarter
